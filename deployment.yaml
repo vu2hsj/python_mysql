@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-kafka-service
+spec:
+  selector:
+    app: kafka-pythonflask
+  ports:
+  - protocol: "TCP"
+    port: 8000
+    targetPort: 8000
+    nodePort: 32001
+    #  type: LoadBalancer
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-pythonflask
+spec:
+  selector:
+    matchLabels:
+      app: kafka-pythonflask
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-pythonflask
+    spec:
+            #hostNetwork: true      
+      containers:
+      - name: kafka-pythonflask
+        image: vu2hsj/kafka_sql_flask:v15
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+
